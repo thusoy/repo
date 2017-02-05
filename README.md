@@ -4,6 +4,7 @@ My custom apt repo.
 
 To install software from this repo:
 
+    $ sudo apt-get install apt-transport-https
     $ echo 'deb https://thusoy-apt.s3-accelerate.amazonaws.com stable main' | sudo tee -a /etc/apt/sources.list
     $ curl https://raw.githubusercontent.com/thusoy/repo/master/release-key.asc | sudo apt-key add -
     $ sudo apt-get update
