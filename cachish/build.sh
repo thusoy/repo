@@ -20,15 +20,21 @@ get_source () {
     tempdir=$(mktemp -d)
     trap 'rm -rf "$tempdir"' INT TERM EXIT
     tar xf "$source_tarball" -C "$tempdir"
+    cp Dockerfile "$tempdir"/thusoy-cachish-*
 }
 
 build_deb () {
-    cd "$tempdir/"*
-    local build_dir=$(pwd)
-    ./tools/build_deb.sh
+    cd "$tempdir"/thusoy-cachish-*
+    sudo docker build . -t repo-cachish
     cd -
-    mkdir -p dist
-    mv "$build_dir/dist/"*.deb dist/
+    local container_id
+    container_id=$(sudo docker ps -qla)
+    sudo docker cp -L "$container_id:/build/dist" .
+    user_id=$(id -u)
+    sudo chown -R "$user_id:$user_id" dist
+    mkdir -p debian/stretch
+    mv dist/* debian/stretch
+    rm -rf dist
 }
 
 main
