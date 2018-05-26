@@ -41,7 +41,7 @@ build_deb () {
         rm -rf dist
     done
     mkdir -p ../dist
-    mv debian/* ../dist
+    find debian -type f -name '*.deb' -exec mv {} ../dist \;
     rm -rf debian
 }
 
