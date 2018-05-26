@@ -7,11 +7,15 @@ main () {
 }
 
 upload_dists () {
-    deb-s3 upload \
-        --sign "$SIGNING_KEY" \
-        --bucket "$TARGET_BUCKET" \
-        --gpg-options='--digest-algo SHA256' \
-        dist/*
+    for dist in jessie stretch; do
+        deb-s3 upload \
+            --sign "$SIGNING_KEY" \
+            --bucket "$TARGET_BUCKET" \
+            --codename "$dist" \
+            --prefix "apt/debian" \
+            --gpg-options='--digest-algo SHA256' \
+            "dist/$dist/"*
+    done
 }
 
 main
