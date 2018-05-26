@@ -20,6 +20,6 @@ ADD CHANGELOG.md /build
 ADD setup.py /build
 
 
-RUN git config --global user.name "Tarjei Husoy" && git config --global user.email "git@thusoy.com"
+RUN git config --global user.name "Tarjei Husoy (automated)" && git config --global user.email "apt@thusoy.com"
 
 RUN ./tools/build_deb.sh
