@@ -41,4 +41,19 @@ build_deb () {
     done
 }
 
+# To check that the package works, run the following and ensure you see the
+# "Booting worker with pid" message from gunicorn
+# for dist in jessie stretch; do
+#     sudo docker run -i -v $(pwd)/debian:/packages debian:$dist /bin/sh -s <<EOF
+# set -eux
+# apt-get update
+# dpkg -i /packages/$dist/cachish_*.deb || :
+# apt-get install -fy
+# CACHISH_CONFIG_FILE=/etc/cachish.yml /opt/venvs/cachish/bin/gunicorn --worker-class gevent 'cachish:create_app_from_file()' &
+# gunicorn_pid=\$!
+# sleep 3
+# kill \$!
+# EOF
+# done
+
 main
