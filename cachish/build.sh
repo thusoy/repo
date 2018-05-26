@@ -20,6 +20,7 @@ get_source () {
     tempdir=$(mktemp -d)
     trap 'rm -rf "$tempdir"' INT TERM EXIT
     tar xf "$source_tarball" -C "$tempdir"
+    cp dockerignore "$tempdir/.dockerignore"
     cp Dockerfile-* "$tempdir"/thusoy-cachish-*
 }
 

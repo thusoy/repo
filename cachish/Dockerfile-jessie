@@ -4,21 +4,14 @@ WORKDIR /build
 
 RUN apt-get update && apt-get install -y \
     debhelper \
-    python3 \
     dh-virtualenv \
     dh-systemd \
-    git
+    git \
+    python-setuptools \
+    python3 \
+    python3-dev
 
-RUN apt-get install -y python-setuptools
-RUN apt-get install -y python3-dev
-
-ADD cachish /build/cachish
-ADD debian /build/debian
-ADD tools /build/tools
-ADD requirements.txt /build
-ADD CHANGELOG.md /build
-ADD setup.py /build
-
+COPY . /build
 
 RUN git config --global user.name "Tarjei Husoy (automated)" && git config --global user.email "apt@thusoy.com"
 
