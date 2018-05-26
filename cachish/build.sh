@@ -27,6 +27,7 @@ get_source () {
 build_deb () {
     rm -rf debian
     local container_id
+    mkdir -p ../dist
     for dist in jessie stretch; do
         cd "$tempdir"/thusoy-cachish-*
         sudo docker build . -f "Dockerfile-$dist" -t "repo-cachish-$dist"
@@ -34,14 +35,12 @@ build_deb () {
         cd -
         container_id=$(sudo docker ps -qla)
         sudo docker cp "$container_id:/build/dist" .
-        user_id=$(id -u)
-        sudo chown -R "$user_id:$user_id" dist
-        mkdir -p debian/"$dist"
-        mv dist/* debian/"$dist"
+        mkdir -p "../dist/$dist"
+        mv dist/*.deb ../dist/"$dist/"
         rm -rf dist
     done
-    mkdir -p ../dist
-    find debian -type f -name '*.deb' -exec mv {} ../dist \;
+    user_id=$(id -u)
+    sudo chown -R "$user_id:$user_id" ../dist
     rm -rf debian
 }
 
