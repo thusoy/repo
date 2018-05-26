@@ -40,6 +40,9 @@ build_deb () {
         mv dist/* debian/"$dist"
         rm -rf dist
     done
+    mkdir -p ../dist
+    mv debian/* ../dist
+    rm -rf debian
 }
 
 # To check that the package works, run the following and ensure you see the
