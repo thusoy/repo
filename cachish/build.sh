@@ -37,7 +37,7 @@ build_deb () {
         container_id=$(sudo docker ps -qla)
         sudo docker cp "$container_id:/build/dist" .
         mkdir -p "../dist/$dist"
-        mv dist/*.deb ../dist/"$dist/"
+        cp dist/*.deb ../dist/"$dist/"
         rm -rf dist
     done
     user_id=$(id -u)
