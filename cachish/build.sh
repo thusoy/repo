@@ -30,6 +30,7 @@ build_deb () {
     mkdir -p ../dist
     for dist in jessie stretch; do
         cd "$tempdir"/thusoy-cachish-*
+        rm dev-requirements.txt configure # prevents dev requirements from being installed in the package
         sudo docker build . -f "Dockerfile-$dist" -t "repo-cachish-$dist"
         sudo docker run "repo-cachish-$dist"
         cd -
