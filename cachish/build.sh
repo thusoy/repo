@@ -3,7 +3,7 @@
 set -eu
 
 REPO=thusoy/cachish
-COMMITISH=v1.4.0
+COMMITISH=v1.5.0
 
 main () {
     get_source
@@ -30,7 +30,12 @@ build_deb () {
     mkdir -p ../dist
     for dist in jessie stretch; do
         cd "$tempdir"/thusoy-cachish-*
-        rm dev-requirements.txt configure # prevents dev requirements from being installed in the package
+        if [ "$dist" = jessie ]; then
+            # Use setuptools new enough to understand environment markers
+            echo replacing setuptools
+            sed -i '' 's/dh_virtualenv --setuptools/dh_virtualenv --setuptools --preinstall setuptools==40.5.0/' debian/rules
+        fi
+        rm -f dev-requirements.txt configure # prevents dev requirements from being installed in the package
         sudo docker build . -f "Dockerfile-$dist" -t "repo-cachish-$dist"
         sudo docker run "repo-cachish-$dist"
         cd -
@@ -38,7 +43,7 @@ build_deb () {
         sudo docker cp "$container_id:/build/dist" .
         mkdir -p "../dist/$dist"
         cp dist/*.deb ../dist/"$dist/"
-        rm -rf dist
+        sudo rm -rf dist
     done
     user_id=$(id -u)
     sudo chown -R "$user_id:$user_id" ../dist
