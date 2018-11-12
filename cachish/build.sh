@@ -33,7 +33,9 @@ build_deb () {
         if [ "$dist" = jessie ]; then
             # Use setuptools new enough to understand environment markers
             echo replacing setuptools
-            sed -i '' 's/dh_virtualenv --setuptools/dh_virtualenv --setuptools --preinstall setuptools==40.5.0/' debian/rules
+            sed 's/dh_virtualenv --setuptools/dh_virtualenv --setuptools --preinstall setuptools==40.5.0/' debian/rules \
+                > tmp-rules
+            mv tmp-rules debian/rules
         fi
         rm -f dev-requirements.txt configure # prevents dev requirements from being installed in the package
         sudo docker build . -f "Dockerfile-$dist" -t "repo-cachish-$dist"
