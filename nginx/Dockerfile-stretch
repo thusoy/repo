@@ -1,0 +1,49 @@
+FROM debian:stretch
+
+WORKDIR /build
+
+RUN apt-get update && apt-get install -y \
+    apt-transport-https \
+    debhelper \
+    dh-systemd \
+    gnupg
+
+ENV REPO="https://nginx.org/packages/mainline/debian/ stretch nginx"
+ENV LC_ALL=C
+# Silences incorrectly logged warning
+ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
+
+COPY repo-key.asc /build/
+
+RUN echo "deb-src $REPO" > "/etc/apt/sources.list.d/nginx.list" \
+    && apt-key add repo-key.asc \
+    && apt-get update && apt-get install -y \
+    devscripts \
+    libpam0g-dev
+
+
+ARG BASE_PACKAGE
+ARG BASE_VERSION
+ARG DEBFULLNAME
+ARG DEBEMAIL
+ARG DEB_VERSION
+
+RUN apt-get build-dep -y $BASE_PACKAGE=$BASE_VERSION \
+    && apt-get source $BASE_PACKAGE=$BASE_VERSION
+
+COPY rules /build/
+COPY modules /build/modules
+
+# Unpack the modules
+RUN tar xf modules/ngx_http_auth_pam_module.tar.gz -C modules/ \
+    && mv modules/ngx_http_auth_pam_module-* modules/ngx_http_auth_pam_module \
+    && tar xf modules/pcre.tar.bz2 -C modules/ \
+    && mv modules/pcre-* modules/pcre
+
+RUN cp ./rules "nginx-$DEB_VERSION/debian/rules" \
+    && cd "nginx-$DEB_VERSION" \
+    && DEBFULLNAME='$DEBFULLNAME' DEBEMAIL='$DEBEMAIL' dch --nmu 'Package new version' \
+    && debuild -eDEB_BUILD_OPTIONS="parallel=$(nproc)" -i -us -uc -b
+
+RUN mkdir -p dist \
+    && mv nginx_*.deb dist

@@ -56,7 +56,6 @@ config.status.nginx: config.env.nginx
 		--user=nginx \
 		--group=nginx \
 		--add-module=../../../modules/ngx_http_auth_pam_module \
-		--add-module=../../../modules/ngx_headers_more_module \
 		--with-compat \
 		--with-file-aio \
 		--with-threads \
