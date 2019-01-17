@@ -42,12 +42,6 @@ mkdir -p "$DOWNLOAD_CACHE"
 download_and_check_hash "$PAM_AUTH_SOURCE" "$DOWNLOAD_CACHE/ngx_http_auth_pam_module.tar.gz" "$PAM_AUTH_SHA256"
 download_and_check_hash "$PCRE_SOURCE" "$DOWNLOAD_CACHE/pcre.tar.bz2" "$PCRE_SHA256"
 
-# tar xf "$DOWNLOAD_CACHE/pcre.tar.bz2" -C "$CHROOT_TEMP/modules/"
-# mv "$CHROOT_TEMP/modules/pcre-$PCRE_VERSION" "$CHROOT_TEMP/modules/pcre"
-
-# tar xf "$DOWNLOAD_CACHE/ngx_http_auth_pam_module.tar.gz" -C "$CHROOT_TEMP/modules/"
-# mv "$CHROOT_TEMP/modules/ngx_http_auth_pam_module-$PAM_AUTH_VERSION" "$CHROOT_TEMP/modules/ngx_http_auth_pam_module"
-
 for dist in stretch; do
     sudo docker build \
         --build-arg BASE_PACKAGE="$BASE_PACKAGE" \
@@ -55,13 +49,13 @@ for dist in stretch; do
         --build-arg DEBFULLNAME="$DEBFULLNAME" \
         --build-arg DEBEMAIL="$DEBEMAIL" \
         --build-arg DEB_VERSION="$(echo $BASE_VERSION | cut -d- -f1)" \
-        -f Dockerfile-$dist \
+        -f nginx/Dockerfile-$dist \
         -t repo-nginx-$dist \
-        .
+        nginx
     sudo docker run "repo-nginx-$dist"
     container_id=$(sudo docker ps -qla)
-    sudo docker cp "$container_id:/build/dist" .
-    mkdir -p "../dist/$dist"
-    cp dist/*.deb ../dist/"$dist/"
-    sudo rm -rf dist
+    sudo docker cp "$container_id:/build/dist" temp-dist
+    mkdir -p "dist/$dist"
+    cp temp-dist/*.deb dist/"$dist/"
+    sudo rm -rf temp-dist
 done
