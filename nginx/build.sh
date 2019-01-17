@@ -11,8 +11,8 @@ DEBFULLNAME='Tarjei Husøy (automated)'
 DEBEMAIL='apt@thusoy.com'
 
 # Modules to fetch
-PCRE_VERSION='8.37'
-PCRE_SHA256='51679ea8006ce31379fb0860e46dd86665d864b5020fc9cd19e71260eef4789d'
+PCRE_VERSION='8.42'
+PCRE_SHA256='2cd04b7c887808be030254e8d77de11d3fe9d4505c39d4b15d2664ffe8bf9301'
 PCRE_SOURCE="http://downloads.sourceforge.net/sourceforge/pcre/pcre-$PCRE_VERSION.tar.bz2"
 
 PAM_AUTH_VERSION='1.4'
