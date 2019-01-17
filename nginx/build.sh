@@ -4,7 +4,7 @@
 
 set -eu
 
-export BASE_VERSION="1.11.13-1~stretch"
+export BASE_VERSION="1.15.8-1~stretch"
 export BASE_PACKAGE="nginx"
 
 DEBFULLNAME='Tarjei Husøy (automated)'
