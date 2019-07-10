@@ -28,7 +28,7 @@ build_deb () {
     artifacts_dir="$(pwd)/artifacts"
     ./tools/build_deb.sh
     cd -
-    cp -r "$artifacts_dir"/ ../dist/
+    cp -r "$artifacts_dir"/* ../dist/
 }
 
 main
