@@ -3,7 +3,7 @@
 set -eu
 
 REPO=thusoy/laim
-COMMITISH=v0.2.0
+COMMITISH=v0.3.0
 
 main () {
     get_source
