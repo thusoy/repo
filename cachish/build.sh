@@ -28,7 +28,7 @@ build_deb () {
     rm -rf debian
     local container_id
     mkdir -p ../dist
-    for dist in jessie stretch; do
+    for dist in stretch buster; do
         cd "$tempdir"/thusoy-cachish-*
         if [ "$dist" = jessie ]; then
             # Use setuptools new enough to understand environment markers
