@@ -3,7 +3,7 @@
 set -eu
 
 REPO=thusoy/cachish
-COMMITISH=v1.5.0
+COMMITISH=v1.6.0
 
 main () {
     get_source
