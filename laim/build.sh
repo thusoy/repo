@@ -3,7 +3,8 @@
 set -eu
 
 REPO=thusoy/laim
-COMMITISH=v0.7.0
+# Temporarily not using a tag to include the build fix
+COMMITISH=64c39f0
 
 main () {
     get_source
