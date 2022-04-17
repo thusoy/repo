@@ -5,8 +5,8 @@ My custom apt repo.
 To install software from this repo:
 
     $ sudo apt-get install apt-transport-https -y
-    $ echo 'deb https://thusoy-apt.s3-accelerate.amazonaws.com/apt/debian (jessie|stretch) main' | sudo tee -a /etc/apt/sources.list
-    $ curl https://raw.githubusercontent.com/thusoy/repo/master/release-key.asc | sudo apt-key add -
+    $ echo 'deb [signed-by=/usr/share/keyrings/thusoy-archive-keyring.gpg] https://repo.thusoy.com/apt/debian $(lsb_release -cs) main' | sudo tee -a /etc/apt/sources.list
+    $ curl -o /usr/share/keyrings/thusoy-archive-keyring.gpg https://raw.githubusercontent.com/thusoy/repo/master/release-key.gpg
     $ sudo apt-get update
     $ sudo apt-get install <package>
 
