@@ -11,6 +11,7 @@ upload_dists () {
         deb-s3 upload \
             --sign "$SIGNING_KEY" \
             --bucket "$TARGET_BUCKET" \
+            --origin thusoy \
             --codename "$dist" \
             --prefix "apt/debian" \
             --gpg-options='--digest-algo SHA256' \
