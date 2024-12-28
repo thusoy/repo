@@ -3,7 +3,7 @@
 set -eu
 
 REPO=thusoy/cachish
-COMMITISH=v1.6.0
+COMMITISH=v1.7.0
 
 main () {
     get_source
@@ -28,34 +28,25 @@ build_deb () {
     rm -rf debian
     local container_id
     mkdir -p ../dist
-    for dist in stretch buster; do
+    for dist in bookworm; do
         cd "$tempdir"/thusoy-cachish-*
-        if [ "$dist" = jessie ]; then
-            # Use setuptools new enough to understand environment markers
-            echo replacing setuptools
-            sed 's/dh_virtualenv --setuptools/dh_virtualenv --setuptools --preinstall setuptools==40.5.0/' debian/rules \
-                > tmp-rules
-            mv tmp-rules debian/rules
-        fi
         rm -f dev-requirements.txt configure # prevents dev requirements from being installed in the package
-        sudo docker build . -f "Dockerfile-$dist" -t "repo-cachish-$dist"
-        sudo docker run "repo-cachish-$dist"
+        docker build . -f "Dockerfile-$dist" -t "repo-cachish-$dist"
+        docker run "repo-cachish-$dist"
         cd -
-        container_id=$(sudo docker ps -qla)
-        sudo docker cp "$container_id:/build/dist" .
+        container_id=$(docker ps -qla)
+        docker cp "$container_id:/build/dist" .
         mkdir -p "../dist/$dist"
         cp dist/*.deb ../dist/"$dist/"
-        sudo rm -rf dist
+        rm -rf dist
     done
-    user_id=$(id -u)
-    sudo chown -R "$user_id:$user_id" ../dist
     rm -rf debian
 }
 
 # To check that the package works, run the following and ensure you see the
 # "Booting worker with pid" message from gunicorn
 # for dist in jessie stretch; do
-#     sudo docker run -i -v $(pwd)/debian:/packages debian:$dist /bin/sh -s <<EOF
+#     docker run -i -v $(pwd)/debian:/packages debian:$dist /bin/sh -s <<EOF
 # set -eux
 # apt-get update
 # dpkg -i /packages/$dist/cachish_*.deb || :
