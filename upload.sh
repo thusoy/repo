@@ -7,7 +7,7 @@ main () {
 }
 
 upload_dists () {
-    for dist in buster bullseye; do
+    for dist in bullseye bookworm; do
         deb-s3 upload \
             --sign "$SIGNING_KEY" \
             --bucket "$TARGET_BUCKET" \
